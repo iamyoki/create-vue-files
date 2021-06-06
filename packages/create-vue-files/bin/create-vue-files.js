@@ -1,24 +1,13 @@
-#!/usr/bin/env node --trace-warnings
+#!/usr/bin/env node
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { configstore } from '../src/configstore.js'
-import { createComponent } from '../src/createFiles.js'
+import * as commands from '../src/commands.js'
 
 const argv = hideBin(process.argv)
 
 yargs(argv)
   // cvf: default command handle
-  .usage('$0', 'Create vue commonly used files', {}, v => {
-    const preset = configstore.get('preset')
-
-    // Use preset
-    if(v.preset && preset) {
-      createComponent(preset)
-    }else {
-      // Not use preset
-      createComponent()
-    }
-  })
+  .usage('$0', 'Create vue commonly used files', {}, commands.handleUsage)
   .option('preset', {
     alias: 'p',
     desc: 'Use your previous preset',

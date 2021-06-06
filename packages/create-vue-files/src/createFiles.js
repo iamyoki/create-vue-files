@@ -88,7 +88,7 @@ export async function createComponent(preset) {
   ])
 
   if (preset) {
-    delete preset?.name
+    delete preset?.component?.name
     Object.assign(answer, preset)
     console.log(
       chalk.yellowBright(
@@ -102,7 +102,7 @@ Scoped: ${answer.scoped}`
   const { name, scoped, lang, tag, save } = answer
 
   if (save && !preset) {
-    configstore.set('preset', answer)
+    configstore.set('preset.component', answer)
     signale.note(
       chalk.bgGreenBright.bold.black(
         `Saved your preset, next time use "--preset" option to reuse.`
@@ -140,7 +140,7 @@ Scoped: ${answer.scoped}`
     }
 
     spinner.start()
-    await fs.writeFile(join(rootDir, `${name}.vue`), content)
+    await fs.writeFile(join(cwd, `${name}.vue`), content)
   }
 
   await sleep(400)
