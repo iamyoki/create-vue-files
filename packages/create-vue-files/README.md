@@ -1,7 +1,7 @@
 # Create Vue Files
 
 <p align="center">
-  <img width="400" src="./assets/cvf-logo.svg" alt="brand">
+  <img width="400" src="https://svgshare.com/i/Xu7.svg" alt="brand">
 </p>
 
 <p align="center">
