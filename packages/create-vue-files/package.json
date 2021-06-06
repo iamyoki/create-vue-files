@@ -6,6 +6,10 @@
     "create-vue-files": "./bin/create-vue-files.js",
     "cvf": "./bin/create-vue-files.js"
   },
+  "files": [
+    "bin",
+    "src"
+  ],
   "author": "yokiyuqian@gmail.com",
   "license": "MIT",
   "type": "module",
