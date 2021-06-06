@@ -1,0 +1,11 @@
+{
+  "name": "create-vue-files",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "demos/*"
+  ],
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
