@@ -6,6 +6,7 @@ import inquirer from 'inquirer'
 import autocomplete from 'inquirer-autocomplete-prompt'
 import ora from 'ora'
 import { dirname, join } from 'path'
+import pkgDir from 'pkg-dir'
 import signale from 'signale'
 import { fileURLToPath } from 'url'
 import { configstore } from './configstore.js'
@@ -23,6 +24,8 @@ const sleep = timeout => new Promise(res => setTimeout(res, timeout))
 // Mains
 
 export async function createComponent(preset) {
+  const rootDir = await pkgDir()
+
   const template = await fs.readFile(join(d, './templates/component.vue'), {
     encoding: 'utf-8'
   })
@@ -66,6 +69,7 @@ export async function createComponent(preset) {
         {
           type: 'confirm',
           name: 'save',
+          default: false,
           message: 'Save this as a preset for future generations?',
           prefix: '💾'
         }
@@ -88,9 +92,10 @@ export async function createComponent(preset) {
     Object.assign(answer, preset)
     console.log(
       chalk.yellowBright(
-`Root html tag: ${answer.tag}
+        `Root html tag: ${answer.tag}
 CSS processor: ${answer.lang}
-Scoped: ${answer.scoped}`)
+Scoped: ${answer.scoped}`
+      )
     )
   }
 
@@ -112,17 +117,33 @@ Scoped: ${answer.scoped}`)
     .replace(lang !== undefined && RegExp(`%lang%`, 'g'), `lang='${lang}'`)
     .replace(tag !== undefined && RegExp(`%tag%`, 'g'), `${tag}`)
 
-  const spinner = ora(`Writing component: ${name}.vue`).start()
+  const spinner = ora(`Writing component: ${name}.vue`)
 
   // Create in current src folder
+  spinner.start()
   try {
-    await fs.writeFile(join(cwd, 'srccc', `${name}.vue`), content)
+    await fs.writeFile(
+      join(rootDir, 'src', 'components', `${name}.vue`),
+      content
+    )
   } catch {
     // If src not exists, create in current folder
-    await fs.writeFile(join(cwd, `${name}.vue`), content)
-  }
-  await sleep(400)
+    spinner.stop()
+    const { inCurrent } = await inquirer.prompt({
+      type: 'confirm',
+      name: 'inCurrent',
+      message: `Directory 'src' is not found. Create component in current dir?`
+    })
 
+    if (!inCurrent) {
+      return signale.warn('Process end.')
+    }
+
+    spinner.start()
+    await fs.writeFile(join(rootDir, `${name}.vue`), content)
+  }
+
+  await sleep(400)
   spinner.stop()
   signale.success(`${name}.vue`)
 }
