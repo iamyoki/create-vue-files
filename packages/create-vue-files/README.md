@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-A cli tool to generate vue-files from current create-react-app project.
+A cli tool to generate commonly used files, like component, routes etc.
 </p>
 
 <p align="center">
